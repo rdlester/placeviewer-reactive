@@ -11,7 +11,7 @@
 
 static NSString *const kPlacesBaseURLString =
     @"https://gist.githubusercontent.com/rdlester/734e4f1ab194b8db23d8/raw/"
-    @"7e04c3d88f6c06d7a794ae570f39a96107b18457/gistfile1.json";
+    @"7e04c3d88f6c06d7a794ae570f39a96107b18457";
 static NSString *const kImageBaseURLString =
     @"https://travelpoker-production.s3.amazonaws.com/uploads/card/image";
 

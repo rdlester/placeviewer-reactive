@@ -24,9 +24,19 @@ static NSString *const kImageEndpointFormat = @"%ld/%@";
 
   NSString *endpoint = [NSString stringWithFormat:kImageEndpointFormat, place.id, place.imageName];
   RACSignal *signal = [self rac_GET:endpoint parameters:nil];
-  [signal subscribeNext:^(UIImage *image) {
-    place.image = image;
-    place.imageLoadingState = LoadingStateFinished;
+  [[signal flattenMap:^RACStream *(RACTuple *response) {
+    UIImage *image = response.first;
+    if ([image isKindOfClass:[UIImage class]]) {
+      return [RACSignal return:image];
+    } else {
+      NSString *errorMessage = @"Unexpected response from images endpoint.";
+      return [RACSignal error:[NSError errorWithDomain:kLoaderErrorDomain
+                                                  code:0
+                                              userInfo:@{NSLocalizedDescriptionKey: errorMessage}]];
+    }
+  }] subscribeNext:^(UIImage *image) {
+      place.image = image;
+      place.imageLoadingState = LoadingStateFinished;
   } error:^(NSError *error) {
     place.imageLoadingState = LoadingStateFailed;
   }];

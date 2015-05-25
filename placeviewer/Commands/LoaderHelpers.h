@@ -8,4 +8,6 @@ typedef NS_ENUM(NSInteger, LoadingState) {
   LoadingStateFailed
 };
 
+static NSString *const kLoaderErrorDomain = @"Network loader error.";
+
 #endif

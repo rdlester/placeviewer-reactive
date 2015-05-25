@@ -27,13 +27,14 @@ static NSString *const kPlacesEndpoint = @"gistfile1.json";
 - (void)loadPlacesForState:(State *)state {
   state.placesLoadingState = LoadingStateLoading;
   RACSignal *signal = [[self rac_GET:kPlacesEndpoint parameters:nil]
-                       flattenMap:^id(NSArray *placesJSON) {
+                       flattenMap:^id(RACTuple *response) {
                          // Parse repsonse into Model object.
+                         NSArray *placesJSON = response.first;
                          if ([placesJSON isKindOfClass:[NSArray class]]) {
                            return [RACSignal return:[[PlaceArray alloc] initFromJSON:placesJSON]];
                          } else {
                            NSString *errorMessage = @"Unexpected response from places endpoint.";
-                           return [RACSignal error:[NSError errorWithDomain:nil
+                           return [RACSignal error:[NSError errorWithDomain:kLoaderErrorDomain
                                                                        code:0
                                                                    userInfo:@{NSLocalizedDescriptionKey: errorMessage}]];
                          }
